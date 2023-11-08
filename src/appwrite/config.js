@@ -44,7 +44,8 @@ export class Service {
 
     async getPost(slug){
         try {
-            return await this.databases.getDocument(conf.appwriteDatabaseId,conf.appwriteCollectionId,slug)
+             await this.databases.getDocument(conf.appwriteDatabaseId,conf.appwriteCollectionId,slug)
+            return true
         } catch (error) {
             console.log("Apwrite service :: get single post :: error", error)
 
@@ -54,7 +55,8 @@ export class Service {
     // Gwtting all post can be done only when index are defined in backend database
     async getAllpost(queries=[Query("status","active")]){
         try {
-            return await this.databases.listDocuments(conf.appwriteDatabaseId, conf.appwriteCollectionId,queries)
+             await this.databases.listDocuments(conf.appwriteDatabaseId, conf.appwriteCollectionId,queries)
+            return true
         } catch (error) {
             console.log("Apwrite service :: get all post :: error", error)
             return false
@@ -87,8 +89,6 @@ export class Service {
     }
 
 }
-
-
 
 
 const service = new Service();

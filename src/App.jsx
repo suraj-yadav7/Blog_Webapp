@@ -1,20 +1,32 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom'
-import Home from './components/Home'
-import Footer from './components/Footer'
-import Header from './components/Header'
+import { useEffect,useState } from 'react'
+import { useDispatch } from 'react-redux'
+import auth from "./appwrite/auth"
+import { login,logout } from './store/authSlice'
 
 function App() {
+const [loading, setLoading] = useState(false)
+const dispatch = useDispatch()
+
+useEffect(()=>{
+    auth.getCurrentUser()
+    .then((userData)=>{
+      if(userData){
+        dispatch(login(userData))
+      }else{
+        dispatch(logout)
+      }
+    })
+    .finally(()=>{
+      setLoading(false)
+    })
+},[])
 
   return (
     <>
-    <Router>
-      <Header/>
-      <Routes>
-        <Route path='/home' element= {<Home/>} />
-      </Routes>
-      <Footer/>
-    </Router>
+    {!loading ? <><div className=''>
+       Home</div></>:null}
     </>
   )
 }
