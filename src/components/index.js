@@ -5,6 +5,10 @@ import Logo from "./Logo"
 import Containers from "./container/Containers"
 import Button from "./Button"
 import Input from "./Input"
+import SignUp from "./SignUp"
+import Login from "./Login"
+import PostForm from "./post-form/PostForm"
+import Postcard from "./Postcard"
 
 export{
     Header,
@@ -13,5 +17,9 @@ export{
     Logo,
     Containers,
     Button,
-    Input
+    Input,
+    SignUp,
+    Login,
+    PostForm,
+    Postcard
 }
