@@ -1,8 +1,7 @@
 import React from 'react'
-import Containers from '../container/Containers';
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 import { Link, useNavigate } from 'react-router-dom';
-import {Logo, LogoutBtn} from "../index"
+import {Logo, LogoutBtn,Containers} from "../index"
 
 const Header = () => {
   const navigate = useNavigate()
@@ -66,6 +65,6 @@ const Header = () => {
       </Containers>
     </header>
   )
-}
+};
 
 export default Header;

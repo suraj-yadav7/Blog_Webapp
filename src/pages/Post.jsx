@@ -2,12 +2,16 @@ import React,{useState,useEffect} from 'react'
 import appwriteServices from "../appwrite/config"
 import {useParams,Link,useNavigate} from "react-router-dom"
 import { useSelector } from 'react-redux'
+import {Containers} from "../components/index"
+import parse from "html-react-parser"
+import {Button } from "../components/index"
 
 const Post = () => {
-    const [post, setPost] = useEffect(null)
-    const {slug} = useParams
+    const [post, setPost] = useState(null)
+    console.log("single post : ", post)
+    // here slug is Post ID , not a path
+    const {slug} = useParams();
     const navigate = useNavigate()
-
     const userData = useSelector((state)=> state.auth.userData)
     const isAuthor= post && userData ? post.userId === userData.$id : false
 
@@ -32,14 +36,13 @@ const Post = () => {
                 navigate("/")
             }
         })
-
     }
   return post ? (
     <div className="py-8">
-        <Container>
+        <Containers>
             <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
                 <img
-                    src={appwriteService.getFilePreview(post.featuredImage)}
+                    src={appwriteServices.getFilePreview(post.featuredImage)}
                     alt={post.title}
                     className="rounded-xl"
                 />
@@ -63,7 +66,7 @@ const Post = () => {
             <div className="browser-css">
                 {parse(post.content)}
                 </div>
-        </Container>
+        </Containers>
     </div>
 ) : null;
 }

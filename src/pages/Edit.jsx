@@ -19,10 +19,10 @@ const Edit = () => {
   return (
     <div className='w-full py-8'>
         <Containers>
-            
+            <PostForm  />
         </Containers>
     </div>
   )
 }
 
-export default Edit
+export default Edit;

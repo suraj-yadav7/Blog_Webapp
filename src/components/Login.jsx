@@ -11,7 +11,7 @@ const Login = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const {register, handleSubmit} = useForm()
-    const [error , setError] = useState()
+    const [error , setError] = useState("")
 
     //login user 
     const login = async(data)=>{
@@ -28,7 +28,6 @@ const Login = () => {
             setError(error)
             console.log("error while login: ", error)
         }
-        
     }
   return (
     <div className='flex items-center justify-center w-full'>
@@ -45,7 +44,7 @@ const Login = () => {
                     Sign Up
                 </Link>
                 </p>
-                {error && <p className='text-red-600 mt-8 text-center'>{error} </p>}
+                {error && <p className='text-red-600 mt-8 text-center'>Error occured while login</p>}
                 <form className="mt-8" onSubmit={handleSubmit(login)} >
                     <div className='space-y-5'>
                         <Input label="email" placeholder="enter your mail ID" type="email" 
@@ -57,7 +56,6 @@ const Login = () => {
                             }
                         })}
                         />
-
                         <Input 
                         label="password"
                         type="password"
@@ -66,7 +64,7 @@ const Login = () => {
                             required:"true"
                         })}
                         />
-                        <Button className='w-full' type='submit'>Sign in</Button>
+                        <Button type='submit'>Sign in</Button>
                     </div>
                 </form> 
         </div>

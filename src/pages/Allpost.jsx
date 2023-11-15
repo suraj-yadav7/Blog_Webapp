@@ -3,7 +3,7 @@ import {Containers, Postcard} from "../components/index"
 import appwriteServices from "../appwrite/config"
 const Allpost = () => {
   const [posts,setPosts] =useState([])
-
+  console.log("post depth propertites: ", posts)
 useEffect(()=>{
 appwriteServices.getAllpost([])
 .then((post)=>{

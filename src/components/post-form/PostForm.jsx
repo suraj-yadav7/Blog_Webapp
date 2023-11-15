@@ -2,23 +2,27 @@ import React, { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { useNavigate } from 'react-router-dom'
 import appWriteServices from "../../appwrite/config"
-import {Button, Input, Select} from "../index"
+import {Button, Input, Select, RTE} from "../index"
 import {useForm} from "react-hook-form"
 
-const PostForm = () => {
+const PostForm = ({post}) => {
     const navigate = useNavigate()
     const userData = useSelector((state) => state.auth.userData)
     
-    const {register, handleSubmit, watch, setValue, setValues, control} = useForm({
+    const {register, handleSubmit, watch, setValue, getValues, control} = useForm({
+      defaultValues:{
         title:post?.title || "",
-        slug:post?.slug || "",
+        slug:post?.$id || "",
         content: post?.content || "",
         status: post?.status || "active"
+      }
 
     })
-    const submit = async ()=>{
+    const submitData = async (data)=>{
+      console.log("submitted clicked")
+      console.log("submit form data: ", data)
         if(post){
-          const file = data.image[0] ? appWriteServices.uploadFile(data.image[0]):null
+          const file = data.image[0] ? await appWriteServices.uploadFile(data.image[0]):null;
           if(file){
             appWriteServices.deleteFile(post.featuredImage)
           }
@@ -31,7 +35,7 @@ const PostForm = () => {
           }
         }
         else{
-          const file=await appWriteServices.uploadFile(data.image[0])
+          const file=data.image[0]? await appWriteServices.uploadFile(data.image[0]):null
           if(file){
             const fileId = file.$id
             data.featuredImage=fileId
@@ -44,16 +48,23 @@ const PostForm = () => {
         }
     }
 
+    // slug transform convert title into link with "-" instead of space
     const slugTransform = useCallback((value)=>{
         if(value && typeof(value) === "string"){
-          value.trim()
+          return value
+          .trim()
           .toLowerCase()
-          .replace(/^[a-zA-Z\d\s]+/g,"-")
+          .replace(/[^a-zA-Z\d\s]+/g,"-")
           .replace(/\s/g,"-")
-
-          return ""
         }
+        return ""
     },[])
+
+      // debugging
+      const clickedHandle=(e)=>{
+        e.preventDefault()
+        console.log("submit btn clicked")
+      }
 
     useEffect(()=>{
       const subscription = watch((value,{name})=>{
@@ -70,7 +81,7 @@ const PostForm = () => {
 
   return (
     <>
-    <form className='flex flex-wrap' onSubmit={handleSubmit(submit)}> 
+    <form className='flex flex-wrap' onSubmit={handleSubmit(submitData)}> 
       <div className='w-2/3 px-2'>
         <Input 
           label="title"
@@ -98,10 +109,10 @@ const PostForm = () => {
           label="Featured Image :"
           type="file"
           className="mb-4"
-          accept="image/png image/jpg image/jpeg image/gif"
+          accept="image/png, image/jpg, image/jpeg, image/gif"
           {...register("image", {required: !post})}
           />
-          {post && (<div className='w-full'>
+          {post && (<div className='w-full mb-4'>
                 <img src={appWriteServices.getFilePreview(post.featuredImage)}
                 alt={post.title}
                 className='rounded-lg'
@@ -117,11 +128,11 @@ const PostForm = () => {
             required:true
           })}
         />
-        <Button type='submit' bgColor={post? "bg-green-500":undefined} className='w-full' >{post ? "Update" :"Submit"} </Button> 
+        <Button type='submit' bgColor={post? "bg-green-500":undefined} className='w-full'  >{post ? "Update":"Submit"}</Button> 
       </div>
     </form>
     </>
   )
-}
+};
 
 export default PostForm;

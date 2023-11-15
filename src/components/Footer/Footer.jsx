@@ -126,7 +126,7 @@ const Footer = () => {
                             <Link
                                 className=" text-base font-medium text-gray-900 hover:text-gray-700"
                                 to="/"
-                            >
+                                >
                                 Licensing
                             </Link>
                         </li>

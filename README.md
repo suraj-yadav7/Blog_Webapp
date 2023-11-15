@@ -13,3 +13,7 @@ Currently, two official plugins are available:
 3.Tinymce
 4.redux toolkit
 5.react router
+
+
+//importabt debuggin notes
+cors error :[CROS: cross origin resources sharing] this error occurs when webapp app try to access data from cross browser which is opposed by the browser. this error need to be fixed in the backend.

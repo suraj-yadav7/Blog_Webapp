@@ -3,8 +3,7 @@ import React from 'react'
 import { Controller } from 'react-hook-form'
 
 
-const RTE = ({name, label, control,defaultValue}) => {
-
+const RTE = ({name, label, control,defaultValue=""}) => {
   return (
     <>
     <div className='w-full'>

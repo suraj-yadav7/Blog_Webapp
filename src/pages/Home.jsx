@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import {useNavigate} from "react-router-dom"
 import {Containers,Postcard} from "../components/index"
+import appwriteServices from "../appwrite/config"
 
 
 const Home = () => {
@@ -47,4 +48,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Home;
