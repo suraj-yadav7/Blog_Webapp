@@ -5,13 +5,15 @@ import { useSelector } from 'react-redux'
 import {Containers} from "../components/index"
 import parse from "html-react-parser"
 import {Button } from "../components/index"
+import { useDispatch } from 'react-redux'
+import { editForm } from '../store/formSlice'
 
 const Post = () => {
     const [post, setPost] = useState(null)
-    console.log("single post : ", post)
     // here slug is Post ID , not a path
     const {slug} = useParams();
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const userData = useSelector((state)=> state.auth.userData)
     const isAuthor= post && userData ? post.userId === userData.$id : false
 
@@ -19,23 +21,27 @@ const Post = () => {
         if(slug){
             appwriteServices.getPost(slug)
             .then((postRes)=>{
-                if(postRes) setPost(postRes)
+                if(postRes) {
+                    setPost(postRes)
+                    // updating formSlice initialstate value : formData
+                    dispatch(editForm(postRes))
+                }
                 else navigate("/")
             })
         }
         else{
             navigate("/")
         }
-
     },[slug,navigate])
 
     const deletePost= ()=>{
-        appwriteServices.deletePost(post.$id).then((status)=>{
-            if(status){
-                appwriteServices.deleteFile(post.featuredImage);
-                navigate("/")
-            }
-        })
+        appwriteServices.deletePost(post.$id)
+            .then((status)=>{
+                if(status){
+                    appwriteServices.deleteFile(post.featuredImage);
+                    navigate("/")
+                }
+            })
     }
   return post ? (
     <div className="py-8">

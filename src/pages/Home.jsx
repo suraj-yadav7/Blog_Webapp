@@ -1,39 +1,47 @@
 import React,{useState,useEffect} from 'react'
-import {useNavigate} from "react-router-dom"
 import {Containers,Postcard} from "../components/index"
 import appwriteServices from "../appwrite/config"
-
+import { useSelector } from 'react-redux'
 
 const Home = () => {
-    const [posts,setPosts] =useState([])
-    
+    const [posts,setPosts] =useState("")
+    const userStatus = useSelector((state) => state.auth.status)
+    const [loading, setLoading] = useState(true)
     useEffect(()=>{
         appwriteServices.getAllpost([])
         .then((post)=>{
         if(post){
+            setLoading(false)
             setPosts(post.documents)
             }
         })
+     
     },[])
   
-    if(posts.length ===0){
+    if(userStatus === false){
         return(
-            <div className="w-full py-8 mt-4 text-center">
+            <div className="w-full  mt-4 text-center">
                 <Containers>
-                    <div className="flex flex-wrap">
-                        <div className="p-2 w-full">
-                            <h1 className="text-2xl font-bold hover: text-gray-500">
-                                Login to read posts
+                    <div className="flex flex-wrap  mt-20">
+                        <div className="p-2 w-full flex justify-center items-center">
+                            <h1 className="text-2xl font-bold hover: text-white-500">
+                                Login to Read Posts
                             </h1>
                         </div>
                     </div>
                 </Containers>
             </div>
-
         )
     }
+    
     return (
-        <div className='w-full py-8'>
+        <>
+        { loading? <div className='spinner'>
+          <article></article>
+          <p className='text-black opacity-75 mt-5 font-corrois text-lg'>Posts is loading....!</p>
+        </div>
+        :
+        <div className='w-full'>
             <Containers>
                 <div className='flex flex-wrap'>
                     { posts && posts.map((postItem)=>(
@@ -45,6 +53,8 @@ const Home = () => {
                 </div>
             </Containers>
         </div>
+        }
+        </>
     )
 }
 

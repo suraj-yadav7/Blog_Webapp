@@ -1,32 +1,32 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect} from 'react'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { useNavigate } from 'react-router-dom'
 import appWriteServices from "../../appwrite/config"
 import {Button, Input, Select, RTE} from "../index"
 import {useForm} from "react-hook-form"
 
-const PostForm = ({post}) => {
+const PostForm = ({editData}) => {
     const navigate = useNavigate()
     const userData = useSelector((state) => state.auth.userData)
-    
+
     const {register, handleSubmit, watch, setValue, getValues, control} = useForm({
       defaultValues:{
-        title:post?.title || "",
-        slug:post?.$id || "",
-        content: post?.content || "",
-        status: post?.status || "active"
+        title:editData?editData.title :"",
+        slug:editData ? editData.$id : "",
+        content: editData ? editData.content : "",
+        status: editData ? editData.status : "active"
       }
-
     })
+
+    //it handle the user update input data and also create a new post
     const submitData = async (data)=>{
-      console.log("submitted clicked")
-      console.log("submit form data: ", data)
-        if(post){
+      // here edit data is passed from edit component when author(owner) tries to update the content.
+        if(editData){
           const file = data.image[0] ? await appWriteServices.uploadFile(data.image[0]):null;
           if(file){
-            appWriteServices.deleteFile(post.featuredImage)
+            appWriteServices.deleteFile(editData.featuredImage)
           }
-          const dbPost = await appWriteServices.updatePost(post.$id,{
+          const dbPost = await appWriteServices.updatePost(editData.$id,{
             ...data,
             featuredImage: file? file.$id : undefined
           })
@@ -48,7 +48,7 @@ const PostForm = ({post}) => {
         }
     }
 
-    // slug transform convert title into link with "-" instead of space
+    // slug transform convert title into link with "-" instead of space" "
     const slugTransform = useCallback((value)=>{
         if(value && typeof(value) === "string"){
           return value
@@ -60,12 +60,6 @@ const PostForm = ({post}) => {
         return ""
     },[])
 
-      // debugging
-      const clickedHandle=(e)=>{
-        e.preventDefault()
-        console.log("submit btn clicked")
-      }
-
     useEffect(()=>{
       const subscription = watch((value,{name})=>{
         if(name ==="title"){
@@ -73,18 +67,21 @@ const PostForm = ({post}) => {
             shouldValidate:true
           }))
         }
+
+
       })
       return()=>{
         subscription.unsubscribe()
       }
     },[slugTransform,setValue,watch])
 
+
   return (
     <>
     <form className='flex flex-wrap' onSubmit={handleSubmit(submitData)}> 
       <div className='w-2/3 px-2'>
         <Input 
-          label="title"
+          label="Title"
           placeholder="title"
           className="mb-4"
           {...register("title",{
@@ -92,9 +89,10 @@ const PostForm = ({post}) => {
           })}
          />
         <Input 
-          label="slug"
+          label="Slug"
           placeholder="slug"
           className="mb-4"
+
           {...register("slug",{
             required:true
           })}
@@ -102,7 +100,7 @@ const PostForm = ({post}) => {
             setValue("slug", slugTransform(e.currentTarget.value),{shouldValidate:true})
           }}
          />
-         <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
+         <RTE label="Content" name="content"  control={control} defaultValue={getValues(["title", "content","slug","status"])} />
       </div>
       <div className='w-1/3 px-2'>
         <Input 
@@ -110,11 +108,12 @@ const PostForm = ({post}) => {
           type="file"
           className="mb-4"
           accept="image/png, image/jpg, image/jpeg, image/gif"
-          {...register("image", {required: !post})}
+          {...register("image", {required: !editData})}
           />
-          {post && (<div className='w-full mb-4'>
-                <img src={appWriteServices.getFilePreview(post.featuredImage)}
-                alt={post.title}
+          {/* it will be visible only in edit post as post props is passed from Edit Component */}
+          {editData && (<div className='w-full mb-4'>
+                <img src={appWriteServices.getFilePreview(editData.featuredImage)}
+                alt={editData.title}
                 className='rounded-lg'
                 />
             </div>
@@ -128,7 +127,7 @@ const PostForm = ({post}) => {
             required:true
           })}
         />
-        <Button type='submit' bgColor={post? "bg-green-500":undefined} className='w-full'  >{post ? "Update":"Submit"}</Button> 
+        <Button type='submit' bgColor={editData? "bg-green-500":undefined} className='w-full'  >{editData ? "Update":"Submit"}</Button> 
       </div>
     </form>
     </>

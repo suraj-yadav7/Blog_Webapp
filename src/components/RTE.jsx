@@ -13,7 +13,7 @@ const RTE = ({name, label, control,defaultValue=""}) => {
     control={control}
     render={({field: {onChange}}) => (
         <Editor
-        initialValue={defaultValue}
+        initialValue={defaultValue[1]}
         init={{
             initialValue: defaultValue,
             height: 500,
@@ -48,7 +48,6 @@ const RTE = ({name, label, control,defaultValue=""}) => {
         />
     )}
     />
-
      </div>
     </>
   )

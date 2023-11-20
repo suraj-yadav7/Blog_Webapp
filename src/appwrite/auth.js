@@ -39,7 +39,7 @@ export class AuthServices {
         }
     }
 
-    //knowing user is still login in homepage
+    //knowing whether user is still login in homepage
     async getCurrentUser(){
         try{
             return await this.account.get();

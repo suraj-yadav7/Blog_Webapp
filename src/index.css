@@ -1,9 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Bitter:wght@300&family=Carrois+Gothic&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* spinner styling */
+.spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.spinner article {
+  width: 5rem;
+  height: 5rem;
+  background-color: transparent;
+  border: 2px solid #98e2cb21;
+  border-top-color: #e8350d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

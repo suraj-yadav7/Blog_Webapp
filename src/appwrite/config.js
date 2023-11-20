@@ -11,7 +11,6 @@ export class Service {
             .setProject(conf.appwriteProjectId)
         this.databases = new Databases(this.client)
         this.bucket = new Storage(this.client)
-
     }
 
     // creating a post
@@ -90,7 +89,6 @@ export class Service {
     getFilePreview(fileId){
         return this.bucket.getFilePreview(conf.appwriteBucketId, fileId)
     }
-
 }
 
 const service = new Service();

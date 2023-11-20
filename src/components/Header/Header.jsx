@@ -1,12 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 import { Link, useNavigate } from 'react-router-dom';
-import {Logo, LogoutBtn,Containers} from "../index"
+import {Logo, LogoutBtn} from "../index"
+import logo from "../../assests/blog-logo.png"
 
-const Header = () => {
+const Header = ({className}) => {
   const navigate = useNavigate()
   const authStatus=useSelector((state) => state.auth.status)
-
+  const userData=useSelector((state) => state.auth.userData)
   const navItem = [
     {
       name:'Home',
@@ -35,12 +36,12 @@ const Header = () => {
   },
   ]
   return (
-    <header className='py-3 shadow bg-gray-500'>
-      <Containers>
+    <header className={`${className} py-1 shadow bg-black text-white`}>
+      <div className='px-10'>
         <nav className='flex'>
-          <div className='mr-4'>
+          <div className='mr-2 '>
             <Link to="/">
-            <Logo width={"70px"}/>
+              <Logo logo={logo} className={"w-28 h-12"}/>
             </Link>
           </div>
           <ul className='flex ml-auto'>
@@ -48,21 +49,34 @@ const Header = () => {
               navItem.map((item) =>
               item.active ? (<li key={item.name}>
                 <button 
-                className='inline-bock px-6 py-2 duration-200 hover:bg-blue-100 rounded-full'
+                className='inline-bock px-6 py-2 duration-200 hover:bg-blue-100 hover:text-black rounded-full'
                 onClick={()=> navigate(item.slug)}>{item.name}</button>
               </li>)
               :null)
             }
             {
               authStatus && (
+              
                 <li>
                   <LogoutBtn />
+                  
                 </li>
               )
+
             }
+            {
+              userData && (
+                <li>
+                  <button 
+                className='inline-bock px-3 py-2 duration-200 hover:bg-blue-100 hover:text-green-500 rounded-sm'
+                >{userData.name}</button>
+                  </li>  
+              )
+            }
+          
           </ul>
         </nav>
-      </Containers>
+      </div>
     </header>
   )
 };
